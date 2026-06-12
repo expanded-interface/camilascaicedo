@@ -1,0 +1,882 @@
+/* ── VARIABLES ── */
+:root {
+  --black: #111;
+  --white: #ffffff;
+  --nav-w: 220px;
+  --top-h: 48px;
+  --bot-h: 36px;
+  --font-serif: 'Red Hat Mono', monospace;
+  --font-mono: 'Red Hat Mono', monospace;
+  --line: rgba(0,0,0,0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-serif);
+  overflow: hidden;
+}
+
+
+/* ════════════════════════════════
+   LAYOUT FIJO
+════════════════════════════════ */
+
+/* TOP BAR */
+#top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--top-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+#logo {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+#top-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.0em;
+}
+
+#menu-toggle {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  
+  color: var(--black);
+}
+
+/* LEFT NAV */
+#left-nav {
+  position: fixed;
+  top: var(--top-h);
+  left: 0;
+  bottom: var(--bot-h);
+  width: var(--nav-w);
+  border-right: 1px solid #152d1b;
+  background: var(--white);
+  overflow-y: auto;
+  z-index: 90;
+  padding: 16px 0;
+}
+
+#left-nav ul { list-style: none; }
+
+/* Secciones principales */
+.nav-section > a,
+.nav-section > span {
+  display: block;
+  padding: 6px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  color: var(--black);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.nav-section > a:hover,
+.nav-section > span:hover { color: #62ff62; }
+.nav-section.active > a  { color: #3535c8; }
+
+/* Hijos colapsables */
+.nav-children { display: none; padding: 0; }
+.nav-children.open { display: block; }
+
+/* Ramas tipo árbol */
+/* ─────────────────────────────
+   Ramas tipo árbol
+───────────────────────────── */
+
+.nav-branch {
+  position: relative;
+  padding-left: 44px;
+}
+
+/* Línea vertical */
+.nav-branch::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #bbb;
+}
+
+/* Último item corta la línea */
+.nav-branch.last::before {
+  height: 14px;
+  bottom: auto;
+}
+
+/* Link */
+.nav-branch a {
+  position: relative;
+  display: block;
+  padding: 5px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+/* Línea horizontal */
+.nav-branch a::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: #bbb;
+}
+
+.nav-branch a:hover {
+  color: #3535c8;
+}
+
+/* RIGHT NAV */
+#right-nav {
+  position: fixed;
+  top: var(--top-h);
+  right: 0;
+  bottom: var(--bot-h);
+  width: 36px;
+  border-left: 1px solid #152d1b;
+  background: var(--white);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#right-nav span {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #aaa;
+  transform: rotate(180deg);
+}
+
+/* BOTTOM BAR */
+#bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--bot-h);
+  background: var(--white);
+  border-top: 1px solid #152d1b;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  z-index: 100;
+  font-family: var(--font-mono);
+  font-size: 0.50rem;
+  overflow: hidden;
+}
+
+/* MAIN */
+#main {
+  position: fixed;
+  top: var(--top-h);
+  left: var(--nav-w);
+  right: 36px;
+  bottom: var(--bot-h);
+  height: calc(100vh - var(--top-h) - var(--bot-h));
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--white);
+}
+
+/* OVERLAY MÓVIL */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 150;
+}
+#overlay.active { display: block; }
+
+
+/* ════════════════════════════════
+   TRANSICIONES DE PÁGINA
+   ────────────────────────────────
+   page-enter: la página nueva aparece suavemente
+   page-exit:  la página vieja sale hacia arriba
+════════════════════════════════ */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageExit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+.page-enter {
+  animation: pageEnter 0.35s ease forwards;
+}
+
+.page-exit {
+  animation: pageExit 0.18s ease forwards;
+  pointer-events: none;
+}
+
+
+/* ════════════════════════════════
+   PÁGINAS
+════════════════════════════════ */
+.page { display: none; width: 100%; min-height: 100%; }
+.page.active { display: block; }
+
+/* Páginas con layout de dos columnas (home, about) */
+.split-page { display: none; }
+.split-page.active {
+  display: flex;
+  min-height: 100%;
+}
+
+/* Home ocupa exactamente el área de #main para que los hijos
+   con position:absolute se anclen correctamente */
+#page-home {
+  position: relative;
+  height: 100%;
+  min-height: unset;
+  overflow: hidden;
+}
+
+.split-text {
+  flex: 1 1 50%;
+  padding: 48px 40px;
+  border-right: 1px solid var(--black);
+  overflow-y: auto;
+}
+
+.split-text h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.split-text p {
+  font-size: 0.72rem;
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.split-text blockquote {
+  font-style: italic;
+  color: #3535c8;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  border-left: 2px solid #f5c842;
+  padding-left: 16px;
+  margin-top: 28px;
+  max-width: 480px;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 36px;
+}
+
+.split-image {
+  flex: 1 1 50%;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fffdf9;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  gap: 12px;
+}
+
+/* Para poner imagen real: agrega <img> dentro de .split-image
+   y elimina el .image-placeholder */
+.split-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Páginas de contenido simple */
+.content-block {
+  padding: 48px;
+  max-width: 720px;
+}
+
+.content-block h2 {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.content-block p {
+  font-size: 1rem;
+  line-height: 0.72;
+  color: #222;
+  margin-bottom: 14px;
+}
+
+.content-block li {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 4px 0;
+  color: #444;
+  list-style: none;
+}
+
+/* Cabecera de páginas con grid */
+.page-header {
+  flex: 1 1 50%;
+  padding: 48px 40px;
+  border-right: 1px solid var(--black);
+  overflow-y: auto;
+}
+
+.page-header h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  }
+
+/* Grid de tarjetas */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+
+/* ════════════════════════════════
+   TARJETAS (CARDS)
+════════════════════════════════ */
+.card {
+  border-right: 1px solid var(--black);
+  border-bottom: 1px solid var(--black);
+  transition: background 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover { background: #f4f4f4; }
+
+/* ── Placeholder sin imagen ── */
+.card-thumb {
+  width: 100%;
+  height: 200px;
+  background: #e8e4dd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Slider de imágenes ── */
+.card-slider {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #e8e4dd;
+}
+
+.slider-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.slide {
+  min-width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Botones prev/next del slider */
+.slider-prev,
+.slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(247, 244, 239, 0.85);
+  border: 1px solid rgba(17, 17, 17, 0.15);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: var(--black);
+  line-height: 1;
+  padding: 0;
+}
+
+.card-slider:hover .slider-prev,
+.card-slider:hover .slider-next { opacity: 1; }
+
+.slider-prev { left: 6px; }
+.slider-next { right: 6px; }
+
+/* Dots */
+.slider-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 5;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+/* ── Cuerpo de la card ── */
+.card-body {
+  padding: 0px 10px 10px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-body h3 {
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.card-body p {
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.card-link-hint {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #3535c8;
+  letter-spacing: 0.04em;
+  margin-top: auto;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.card:hover .card-link-hint { opacity: 1; }
+
+.card-year {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #aaa;
+}
+
+
+/* ════════════════════════════════
+   CHIPS DE FILTRO (página Proyectos)
+════════════════════════════════ */
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 2px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.chip:hover {
+  border-color: #1aff6e;
+  color: #1aff6e;
+}
+
+.chip.active {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .page-header { flex-direction: column; gap: 12px; }
+}
+
+/* ════════════════════════════════
+   UTILIDADES
+════════════════════════════════ */
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+
+.muted  { color: #888; font-size: 0.85rem; }
+.mono   { font-family: var(--font-mono); }
+
+
+/* ════════════════════════════════
+   RESPONSIVE — MÓVIL
+════════════════════════════════ */
+@media (max-width: 768px) {
+  #left-nav {
+    left: -260px;
+    width: 260px;
+    transition: left 0.3s ease;
+    z-index: 200;
+  }
+  #left-nav.open { left: 0; }
+
+  #right-nav { display: none; }
+
+  #main { left: 0; right: 0; }
+
+  #menu-toggle { display: block; }
+
+  .split-page.active { flex-direction: column; }
+  .split-text {
+    padding: 28px 24px;
+    border-right: none;
+    border-bottom: 1px solid var(--black);
+    height: auto;
+    overflow-y: visible;
+  }
+  .split-image { min-height: 260px; flex: 0 0 260px; }
+  .split-projects {
+    height: auto;
+    overflow-y: visible;
+    min-height: 300px;
+  }
+
+  .content-block { padding: 28px 24px; }
+  .page-header { padding: 20px 20px 14px; }
+}
+/* ── HOME: contenedor principal (ver regla #page-home arriba) ── */
+
+/* ── Vistas del home ── */
+.home-view {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.home-view.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Vista split dentro de home-view ── */
+#view-split {
+  display: flex;
+  min-height: 100%;
+}
+
+#view-split .split-text {
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none;
+}
+#view-split .split-text::-webkit-scrollbar { display: none; }
+
+.split-projects {
+  flex: 1 1 50%;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none;
+}
+.split-projects::-webkit-scrollbar { display: none; }
+
+.split-projects .grid {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* ── Vista burbujas ── */
+#view-bubbles {
+  background: #f9f7f2;
+}
+
+#bubble-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#bubble-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bubble-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  color: #222;
+  text-align: center;
+  pointer-events: all;
+  cursor: pointer;
+  white-space: nowrap;
+  text-shadow:
+    0 0 8px #f9f7f2,
+    0 0 16px #f9f7f2,
+    0 0 24px #f9f7f2;
+  transform: translate(-50%, -50%);
+  transition: color 0.2s;
+  line-height: 1.4;
+}
+
+.bubble-label:hover { color: #3535c8; }
+
+.bubble-year {
+  display: block;
+  font-size: 0.46rem;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* ── Switch de vista ── */
+.view-switch {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  display: none;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+#page-home.active .view-switch {
+  display: flex;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  font-size: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.switch-btn.active {
+  background: #111;
+  color: #fff;
+}
+
+/* ── TICKER / MARQUEE ── */
+#bottom-bar {
+  overflow: hidden;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+  animation: ticker 34s linear infinite;
+  align-items: center;
+  padding: 2px 0;
+}
+
+@keyframes ticker {
+  from { transform: translateX(100vw); }
+  to   { transform: translateX(-100%); }
+}
+
+
+/* ════════════════════════════════
+   PÁGINA DE PROYECTO INLINE
+   (cargada dinámicamente vía fetch)
+════════════════════════════════ */
+#page-proyecto {
+  overflow: hidden !important;
+  display: none;
+  flex-direction: column;
+}
+
+#page-proyecto.active {
+  display: flex;
+}
+
+/* El .project-split hereda los estilos de proyectos.css
+   que ya se carga en el <head> del index.html */
+#page-proyecto .project-split {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Fix: scroll independiente en columnas de proyecto inline ── */
+#page-proyecto {
+  height: calc(100vh - var(--top-h) - var(--bot-h));
+}
+
+#page-proyecto .project-split {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+#page-proyecto .project-col-text,
+#page-proyecto .project-col-images {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ── Mobile: deshace el layout de columnas fijas ── */
+@media (max-width: 768px) {
+  #page-proyecto {
+    height: auto !important;
+    overflow: visible !important;
+    overflow-y: auto !important;
+    min-height: calc(100vh - var(--top-h) - var(--bot-h));
+  }
+
+  #page-proyecto .project-split {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #page-proyecto .project-col-text,
+  #page-proyecto .project-col-images {
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow: visible !important;
+    width: 100%;
+    display: block;
+  }
+
+  #page-proyecto .project-col-images {
+    min-height: unset;
+  }
+
+  #page-proyecto .project-img-block img {
+    width: 100%;
+    height: auto !important;
+    max-height: unset !important;
+    object-fit: contain;
+    display: block;
+  }
+
+  #page-proyecto .project-img-block {
+    min-height: unset !important;
+    padding: 16px;
+  }
+}
+
+/* Para que el texto principal quede encima */
+.split-text > * {
+  position: relative;
+  z-index: 2;
+}

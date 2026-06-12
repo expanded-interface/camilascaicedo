@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  ══════════════════════════════════════════════════════
+  PÁGINA DE PROYECTO — Voces del humedal
+  ──────────────────────────────────────────────────────
+  Este archivo tiene DOS usos:
+  1. El portafolio (index.html) hace fetch de él y extrae
+     solo el .project-split para mostrarlo dentro del
+     layout principal, sin recargar la página.
+  2. Si alguien abre este .html directamente, funciona
+     como página standalone con su propio nav estático.
+
+  ✏️  EDITA: el contenido dentro de .project-split.
+  ✏️  NO editar: el nav y el footer (se usan solo en
+     modo standalone; en el portafolio se ignoran).
+══════════════════════════════════════════════════════
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lenguaje liminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="proyectos.css">
+  <style>
+    /* Solo activo en modo standalone (carga directa) */
+    body:not(.embedded) {
+      opacity: 0;
+      animation: bodyFadeIn 0.45s ease 0.05s forwards;
+    }
+    @keyframes bodyFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    /* Oculta el nav standalone cuando se embebe en el portafolio */
+    body.embedded #top-bar,
+    body.embedded #left-nav,
+    body.embedded #right-nav,
+    body.embedded #bottom-bar,
+    body.embedded #overlay { display: none !important; }
+    body.embedded #main { top: 0; left: 0; right: 0; bottom: 0; }
+  </style>
+</head>
+
+<body class="project-page">
+
+  <!-- NAV STANDALONE — solo visible si abres el .html directamente -->
+  <header id="top-bar">
+    <div id="logo" onclick="window.location.href='../index.html'">Nombre</div>
+    <div id="top-right">
+      <button id="menu-toggle" onclick="toggleMobileNav()">Menú</button>
+      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <span id="clock">00:00</span>
+    </div>
+  </header>
+
+  <nav id="left-nav">
+    <ul>
+      <li class="nav-section"><a href="../index.html">— Home</a></li>
+      <li class="nav-section active" id="nav-proyectos-group">
+        <span onclick="toggleGroup('nav-proyectos-group')">— Proyectos</span>
+        <ul class="nav-children open" id="children-nav-proyectos-group"></ul>
+      </li>
+      <li class="nav-section" id="nav-community-group">
+        <span onclick="toggleGroup('nav-community-group')">— Texts</span>
+        <ul class="nav-children open" id="children-nav-community-group">
+          <li class="nav-branch"><a href="../index.html?page=residencias">Residencias</a></li>
+          <li class="nav-branch"><a href="../index.html?page=ComunnitaryLog">ComunnitaryLog</a></li>
+          <li class="nav-branch last"><a href="../index.html?page=calendario">Calendario</a></li>
+        </ul>
+      </li>
+      <li class="nav-section"><a href="../index.html?page=about">About</a></li>
+    </ul>
+    <div class="nav-project-label">
+      <p>Viendo ahora</p>
+      <p>Voces del humedal</p>
+    </div>
+  </nav>
+
+  <aside id="right-nav"><span>Colaboraciones</span></aside>
+  <div id="overlay" onclick="closeMobileNav()"></div>
+
+  <main id="main">
+
+    <!-- ══════════════════════════════════════════════════
+         .project-split — ESTE ES EL CONTENIDO QUE SE
+         EXTRAE Y EMBEBE EN EL PORTAFOLIO.
+         ✏️  Edita todo lo que está dentro de aquí.
+    ═══════════════════════════════════════════════════ -->
+    <div class="project-split">
+
+      <!-- COLUMNA IZQUIERDA — texto -->
+      <div class="project-col-text">
+
+        <div class="project-header">
+          <div class="project-meta">
+            <span class="project-year">2025</span>
+          </div>
+          <!-- ✏️ Título del proyecto -->
+          <h1>Lenguaje liminal</h1>
+          <p class="project-lead">
+            Liminal Language
+          </p>
+           <blockquote>
+            What sonic traces can we send into the cosmos to imagine other forms of relationship 
+            — more sensitive and non-extractivist — within and beyond the planet?
+          </blockquote>
+        </div>
+
+<div class="project-text">
+          <ul>
+            <li>En</li>
+          </ul>
+          <p>
+            Liminal Language explores the possibility of visualizing what remains outside the perceptible field. 
+            The pieces draw from the theosophical investigations of Annie Besant and C. W. Leadbeater in Thought-Forms, 
+            where thoughts, emotions, and intentions are described as energetic forms that can be translated into visual 
+            diagrams and chromatic compositions.
+            <br>
+            The works are developed through meditative observation sessions, somatic perception exercises, 
+            and records documenting variations in color, shape, movement, and gesture in relation to different 
+            emotional and environmental states. From these processes, the project constructs a visual taxonomy of 
+            perceptual and affective experiences, understanding the image as an interface between perceptible and imperceptible worlds.
+          </p>
+        </div>
+
+        <div class="project-text">
+          <ul>
+            <li>Es</li>
+          </ul>
+          <p>
+          Lenguaje Liminal explora la posibilidad de visualizar aquello que permanece fuera del campo perceptible. 
+          Las piezas toman como punto de partida las investigaciones teosóficas de Annie Besant y C. W. Leadbeater en *Thought-Forms*,
+           donde pensamientos, emociones e intenciones son comprendidos como formas energéticas capaces de traducirse en 
+           diagramas visuales y composiciones cromáticas.
+          <br>
+          Las obras se desarrollan a través de sesiones de observación meditativa, ejercicios de percepción somática 
+          y registros que documentan variaciones de color, forma, movimiento y gesto en relación con distintos estados 
+          emocionales y ambientales. A partir de estos procesos, el proyecto construye una taxonomía visual de experiencias 
+          perceptuales y afectivas, entendiendo la imagen como una interfaz entre mundos perceptibles e imperceptibles.
+
+          </p>
+        </div>
+
+        <!-- ✏️ Cambia los href a los proyectos anterior y siguiente -->
+        <nav class="project-nav">
+          <a href="Casa_sin_techo.html" class="project-nav-prev">
+            <span class="nav-hint">← anterior</span>
+            <span>Casa sin techo</span>
+          </a>
+          <a href="Orillas_del_rio_Rahue.html" class="project-nav-next">
+            <span class="nav-hint">siguiente →</span>
+            <span>Orillas del río Rahue</span>
+          </a>
+        </nav>
+
+      </div><!-- /project-col-text -->
+
+      <!-- COLUMNA DERECHA — imágenes -->
+      <div class="project-col-images">
+
+        <div class="project-img-block">
+          <img src="../Imagen/Radiofrecuencia/Radiofrecuencia_CSC_03.png" alt="Quorum">
+          <p class="img-caption">Amanecer sobre el humedal río Damas, 2022.</p>
+       
+
+          <img src="../Imagen/Radiofrecuencia/Radiofrecuencia_CSC_04.jpg" alt="Quorum">
+          <p class="img-caption">Visual documentation authored by the project team, 
+            <br> Exhibition documentation at Sala Laboratorio, Parque Cultural de Valparaíso – Ex Cárcel 2026.</p>
+
+          <img src="../Imagen/Radiofrecuencia/Radiofrecuencia_CSC_02.png" alt="Quorum">
+          <p class="img-caption">Visual documentation authored by the project team, Exhibition documentation at Sala Laboratorio, Parque Cultural de Valparaíso – Ex Cárcel 2026.</p>
+        </div>
+
+         <div class="project-img-block">
+          <img src="../Imagen/Radiofrecuencia/Radiofrecuencia_CSC_01.png" alt="Quorum">
+          <p class="img-caption">Visual documentation authored by the project team, Exhibition documentation at Sala Laboratorio, Parque Cultural de Valparaíso – Ex Cárcel 2026.</p>
+        </div>
+
+          <div class="project-img-block">
+          <img src="../Imagen/Radiofrecuencia/Radiofrecuencia_CSC_04.jpg" alt="Quorum">
+          <p class="img-caption">Visual documentation authored by the project team, Exhibition documentation at Sala Laboratorio, Parque Cultural de Valparaíso – Ex Cárcel 2026.</p>
+        </div>
+
+       
+        
+       
+
+      </div><!-- /project-col-images -->
+
+    </div><!-- /project-split -->
+
+  </main>
+
+  <footer id="bottom-bar">
+    <span class="muted">ᯤ </span>
+    <span class="pill" style="background:#e8b4e8">Los Lagos, OS, CL</span>
+    <span class="pill" style="background:#bde4be">Last update 05-24-26</span>
+  </footer>
+
+  <script src="../main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const links = document.querySelectorAll('#children-nav-proyectos-group a');
+      links.forEach(a => {
+        if (a.href.includes('Voces_del_humedal')) {
+          a.style.color = '#3535c8';
+          a.style.fontWeight = '500';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
